@@ -1,0 +1,31 @@
+@startuml "messagebus"
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FA5 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+
+!include FA5/clock.puml
+!include DEVICONS/msql_server.puml
+!include DEVICONS/dotnet.puml
+
+AddElementTag("microService", $shape=EightSidedShape(), $bgColor="CornflowerBlue", $fontColor="white", $legendText="micro service (eight sided)")
+AddElementTag("storage", $shape=RoundedBoxShape(), $bgColor="lightSkyBlue", $fontColor="white")
+AddRelTag("async", $textColor=$ARROW_COLOR, $lineColor=$ARROW_COLOR, $lineStyle=DashedLine())
+
+SHOW_PERSON_OUTLINE()
+
+Person(comerciante, Comerciante, "O comerciante")
+
+Container(cron, "Crontab", "cron", "Tarefas agendadas", "clock")
+
+System_Boundary(c1, "Solução 1") {
+    Container(app, "Worker", "C#/NetCore", "Worker consolidador", "dotnet")
+    Container(financeiro_api, "API", "C#/NetCore", "API Financeiro", "dotnet", $tags = "microService")
+    ContainerDb(db, "Financeiro", "T-SQL", "Principal base de dados", "msql_server", $tags = "storage")
+}
+
+Rel(cron, app, "aciona","container")
+Rel(comerciante, financeiro_api, "Executa lançamentos, consulta saldo","HTTPs/json", $tags="async")
+Rel(financeiro_api, db, "Cadastra lançamentos", "T-SQL")
+Rel(app, db, "Executa consolidacao do fluxo de caixa", "T-SQL")
+
+@enduml
