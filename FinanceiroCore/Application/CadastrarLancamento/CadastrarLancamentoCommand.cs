@@ -1,5 +1,6 @@
 ﻿using FinanceiroCore.Domain;
 using FinanceiroCore.Infrasctructure.Persistance;
+using System.Collections.Generic;
 
 namespace FinanceiroCore.Application.CadastrarLancamento
 {
@@ -12,10 +13,11 @@ namespace FinanceiroCore.Application.CadastrarLancamento
             _lancamentoRepository = lancamentoRepository;
         }
 
-        public void Execute(Lancamento lancamento)
+        public List<string> Execute(Lancamento lancamento)
         {
-            //Pode ter regras de validação ou outras regras de negocio
+            lancamento.Valor = lancamento.GetValor();
             _lancamentoRepository.Cadastrar(lancamento);
+            return null;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using FinanceiroCore.Domain;
 using FinanceiroCore.Infrasctructure.Persistance;
 using System;
+using System.Collections.Generic;
 
 namespace FinanceiroCore.Application.CadastrarLancamento
 {
@@ -14,7 +15,7 @@ namespace FinanceiroCore.Application.CadastrarLancamento
             _saldoRepository = saldoRepository;
             _cadastrarLancamentoCommand = cadastrarLancamentoCommand;
         }
-        public void Execute(Lancamento lancamento)
+        public List<string> Execute(Lancamento lancamento)
         {
             _cadastrarLancamentoCommand.Execute(lancamento); //Decorator Pattern
 
@@ -32,9 +33,10 @@ namespace FinanceiroCore.Application.CadastrarLancamento
             }
             else
             {
-                saldo.SaldoDia += lancamento.Valor;
+                saldo.SaldoDia += lancamento.GetValor();
                 _saldoRepository.Atualizar(saldo);
             }
+            return null;
         }
     }
 }

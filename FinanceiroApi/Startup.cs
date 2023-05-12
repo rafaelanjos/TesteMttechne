@@ -1,7 +1,10 @@
+using FinanceiroApi.SyntaxValidators;
 using FinanceiroCore.Application.CadastrarLancamento;
 using FinanceiroCore.Application.Consolidado;
 using FinanceiroCore.Infrasctructure;
 using FinanceiroCore.Infrasctructure.Persistance;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -54,8 +57,12 @@ namespace FinanceiroApi
             
             services.AddScoped<ICadastrarLancamentoCommand, CadastrarLancamentoCommand>();
             services.Decorate<ICadastrarLancamentoCommand, AtualizarSaldoCommand>();
+            services.Decorate<ICadastrarLancamentoCommand, ValidateCadastrarLancamentoCommand>();
 
             services.AddScoped<IConsolidadoQuery, ConsolidadoQuery>();
+
+            services.AddFluentValidationAutoValidation();
+            services.AddValidatorsFromAssemblyContaining<LancamentoDtoValidator>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

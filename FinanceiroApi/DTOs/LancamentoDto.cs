@@ -7,13 +7,15 @@ namespace FinanceiroApi.DTOs
     {
         public DateTime Data { get; set; }
         public Decimal Valor { get; set; }
+        public char Tipo { get; set; }
 
         public Lancamento MapperToDomain()
         {
             return new Lancamento
             {
                 Data = Data,
-                Valor = Valor
+                Valor = Valor,
+                Tipo = Tipo
             };
         }
     }
